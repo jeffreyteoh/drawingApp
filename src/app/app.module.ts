@@ -5,14 +5,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+import { DashboardPage} from "../pages/dashboard/dashboard";
+import { LoginPage } from "../pages/login/login";
 import { CanvasDraw } from '../components/canvas-draw/canvas-draw';
-
+import { AuthProvider } from '../providers/auth/auth';
+import { GooglePlus } from "@ionic-native/google-plus";
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
+    DashboardPage,
+    LoginPage,
     CanvasDraw
   ],
   imports: [
@@ -22,12 +25,15 @@ import { CanvasDraw } from '../components/canvas-draw/canvas-draw';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    DashboardPage,
+    LoginPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AuthProvider,
+    GooglePlus
   ]
 })
 export class AppModule {}
