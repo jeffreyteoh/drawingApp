@@ -7,7 +7,7 @@ import { FIREBASE_CONFIG } from './firebase.config';
 import firebase from 'firebase/app';
 
 import { LoginPage } from "../pages/login/login";
-import {DashboardPage} from "../pages/dashboard/dashboard";
+import { DashboardPage } from "../pages/dashboard/dashboard";
 
 @Component({
   templateUrl: 'app.html'

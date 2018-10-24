@@ -1,5 +1,9 @@
 <ion-toolbar id="top-toolbar">
   <ion-buttons left>
+    <button icon-only ion-button (click)="goback()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+
     <button *ngFor="let colour of availableColours" icon-only ion-button (click)="changeColour(colour)">
       <ion-icon [style.color]="colour" name="brush"></ion-icon>
     </button>
@@ -8,10 +12,22 @@
     <button style="border: 1px solid #cecece;" ion-button icon-only style.color="#fff" (click)="changeColour('#fff')">
       <ion-icon style="color: #fff;" name="square"></ion-icon>
     </button>
+    <button style="border: 1px solid #cecece;" ion-button icon-only (click)="doRadio()">
+      <ion-icon name="albums"></ion-icon>
+    </button>
+    <button style="border: 1px solid #cecece;" ion-button icon-only (click)="share()">
+      <ion-icon name="share"></ion-icon>
+    </button>
   </ion-buttons>
 </ion-toolbar>
-
-<canvas #myCanvas (mousedown)="handleStart($event)" (drag)="handleMove($event)"  (touchstart)="handleStart($event)" (touchmove)="handleMove($event)"></canvas>
+<ion-img #chicken src="https://firebasestorage.googleapis.com/v0/b/ccda-bd25f.appspot.com/o/tracing%2FBarn.gif?alt=media&token=a22f2c58-b271-4251-a16b-e8c4455ecb09"></ion-img>
+<canvas #myCanvas
+        (mousedown)="handleStart($event)"
+        (drag)="handleMove($event)"
+        (touchstart)="handleStart($event)"
+        (touchmove)="handleMove($event)"
+        (touchend)="convert2Img()">
+</canvas>
 
 <ion-toolbar id="bottom-toolbar">
   <ion-buttons left>

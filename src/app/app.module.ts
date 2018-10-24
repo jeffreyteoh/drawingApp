@@ -10,30 +10,39 @@ import { LoginPage } from "../pages/login/login";
 import { CanvasDraw } from '../components/canvas-draw/canvas-draw';
 import { AuthProvider } from '../providers/auth/auth';
 import { GooglePlus } from "@ionic-native/google-plus";
+import { HomePage } from "../pages/home/home";
+import { SocialSharing} from "@ionic-native/social-sharing";
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
   declarations: [
     MyApp,
     DashboardPage,
     LoginPage,
-    CanvasDraw
+    CanvasDraw,
+    HomePage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     DashboardPage,
-    LoginPage
+    LoginPage,
+    HomePage,
+    CanvasDraw
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
-    GooglePlus
+    GooglePlus,
+    SocialSharing
   ]
 })
 export class AppModule {}
