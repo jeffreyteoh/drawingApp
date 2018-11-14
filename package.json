@@ -65,6 +65,7 @@
       },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-googleplus": {
+        "WEB_APPLICATION_CLIENT_ID": "430331119499-9eb43lmjtfmvur08gh678fl3656rmvap.apps.googleusercontent.com",
         "REVERSED_CLIENT_ID": "myreversedclientid",
         "PLAY_SERVICES_VERSION": "11.8.0"
       },

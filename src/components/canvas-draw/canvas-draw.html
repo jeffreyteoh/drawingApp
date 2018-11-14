@@ -20,10 +20,10 @@
     </button>
   </ion-buttons>
 </ion-toolbar>
-<ion-img #chicken src="https://firebasestorage.googleapis.com/v0/b/ccda-bd25f.appspot.com/o/tracing%2FBarn.gif?alt=media&token=a22f2c58-b271-4251-a16b-e8c4455ecb09"></ion-img>
 <canvas #myCanvas
         (mousedown)="handleStart($event)"
-        (drag)="handleMove($event)"
+        (mousemove)="handleMove($event)"
+        (mouseup)="convert2Img()"
         (touchstart)="handleStart($event)"
         (touchmove)="handleMove($event)"
         (touchend)="convert2Img()">
@@ -32,6 +32,7 @@
 <ion-toolbar id="bottom-toolbar">
   <ion-buttons left>
     <button color="dark" ion-button icon-only (click)="clearCanvas()"><ion-icon name="trash"></ion-icon></button>
+    <button color="dark" ion-button icon-only (click)="playDrawing()"><ion-icon name="play"></ion-icon></button>
   </ion-buttons>
   <ion-buttons right>
     <button color="dark" ion-button icon-only (click)="changeSize(5)"><ion-icon style="font-size: 0.25em;" name="radio-button-on"></ion-icon></button>

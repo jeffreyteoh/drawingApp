@@ -18,6 +18,7 @@ export class CanvasDraw {
   uid: any;
   img: any;
   availableImg: any;
+  userDrawing: boolean = false;
 
   currentColour: string = '#000000';
   availableColours: any;
@@ -44,6 +45,7 @@ export class CanvasDraw {
     this.drawingID = navParam.get("drawingID");
     this.uid = navParam.get("uid");
     this.pixi.user = this.uid;
+    this.userDrawing = false;
     this.availableColours = [
       '#000000',
       '#1abc9c',
@@ -114,13 +116,15 @@ export class CanvasDraw {
 
   handleStart(ev){
     console.log(ev);
-    this.lastX = ev.touches[0].pageX;
-    this.lastY = ev.touches[0].pageY;
+    this.userDrawing = true;
+    this.lastX = ev.touches ? ev.touches[0].pageX: ev.clientX;
+    this.lastY = ev.touches ? ev.touches[0].pageY: ev.clientY;
   }
 
   handleMove(ev){
-    let currentX = ev.touches[0].pageX;
-    let currentY = ev.touches[0].pageY;
+    if (!this.userDrawing) {return false;}
+    let currentX = ev.touches ? ev.touches[0].pageX: ev.clientX;
+    let currentY = ev.touches ? ev.touches[0].pageY: ev.clientY;
     this.pixi.currentX = currentX;
     this.pixi.currentY = currentY;
     this.pixi.lastX = this.lastX;
@@ -136,6 +140,7 @@ export class CanvasDraw {
   }
 
   convert2Img() {
+    this.userDrawing= false;
     let b64 = this.canvasElement.toDataURL();
     b64 = b64.replace("data:image/png;base64,", '');
     fb.storage().ref("drawing/" + this.drawingID + ".png" ).delete()
@@ -145,20 +150,51 @@ export class CanvasDraw {
 
   draw(pixi) {
     let ctx = this.canvasElement.getContext('2d');
-    ctx.beginPath();
-    ctx.lineJoin = "round";
-    ctx.moveTo(pixi.lastX, pixi.lastY);
-    ctx.lineTo(pixi.currentX, pixi.currentY);
-    ctx.closePath();
-    ctx.strokeStyle = pixi.color;
-    ctx.lineWidth = pixi.brushSize;
-    ctx.stroke();
+    setTimeout(()=> {
+      ctx.beginPath();
+      ctx.lineJoin = "round";
+      ctx.moveTo(pixi.lastX, pixi.lastY);
+      ctx.lineTo(pixi.currentX, pixi.currentY);
+      ctx.closePath();
+      ctx.strokeStyle = pixi.color;
+      ctx.lineWidth = pixi.brushSize;
+      ctx.stroke();
+    }, 0);
   }
 
   clearCanvas(){
     let ctx = this.canvasElement.getContext('2d');
     ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
     return fb.database().ref("drawing/" + this.drawingID + "/content").set(null);
+  }
+
+  playDrawing() {
+    console.log("playDrawing");
+    let db = fb.database().ref("drawing/" + this.drawingID + "/content"),
+        ctx = this.canvasElement.getContext('2d'),
+        cn = this;
+
+    db.once("value").then((snap) => {
+      let arr = [],
+        ind = 1,
+        i= 0;
+
+      //convert to arr for easier access
+      snap.forEach((value) => { arr.push(value.val()); });
+      while (ind !== arr.length) {
+        ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+        while (i !== ind) {
+          cn.draw(arr[i]);
+          i++;
+        }
+        i = 0;
+        ind++;
+      }
+    })
+  }
+
+  getdata() {
+
   }
 
   update() {
