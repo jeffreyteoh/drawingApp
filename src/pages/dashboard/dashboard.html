@@ -1,0 +1,53 @@
+<!--
+  Generated template for the DashboardPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-toolbar>
+      <!--<button ion-button [menuToggle]="activeMenu">-->
+        <!--<ion-icon name="menu"></ion-icon>-->
+      <!--</button>-->
+      <ion-title>Dashboard</ion-title>
+      <ion-buttons right>
+        <button style="border: 1px solid #cecece;" ion-button icon-only (click)="presentPrompt()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+        <button style="border: 1px solid #cecece;" ion-button icon-only (click)="logoutUser()">
+          <ion-icon name="exit"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="card-background-page">
+
+  <ion-card (click)="createNewDrawing()">
+    <ion-icon name="add"></ion-icon>
+    <div class="card-subtitle" >New Drawing</div>
+  </ion-card>
+
+  <ion-card *ngFor="let list of drawingList" (click)="gotoCanvas(list.id)">
+    <img src="{{list.img}}" class="" width="100%" height="297px">
+  </ion-card>
+</ion-content>
+
+<!--<ion-menu [content]="content" id="menu1">-->
+
+  <!--<ion-header>-->
+    <!--<ion-toolbar color="danger">-->
+      <!--<ion-title>Menu 2</ion-title>-->
+    <!--</ion-toolbar>-->
+  <!--</ion-header>-->
+
+  <!--<ion-content>-->
+    <!--<ion-list>-->
+      <!--<button ion-item menuClose="menu2" detail-none>-->
+        <!--Close Menu 2-->
+      <!--</button>-->
+    <!--</ion-list>-->
+  <!--</ion-content>-->
+
+<!--</ion-menu>-->

@@ -29,6 +29,7 @@
     "@ionic/pro": "2.0.3",
     "@ionic/storage": "2.2.0",
     "canvas": "^2.0.1",
+    "clipboard": "^2.0.4",
     "cordova-android": "7.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.1",

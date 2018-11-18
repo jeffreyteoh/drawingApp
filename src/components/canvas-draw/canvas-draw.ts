@@ -1,7 +1,9 @@
 import { Component, ViewChild, Renderer } from '@angular/core';
-import {Platform, NavController, NavParams, AlertController} from 'ionic-angular';
+import {Platform, NavController, NavParams, AlertController } from 'ionic-angular';
 import * as fb from 'firebase';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import * as Clipboard from 'clipboard/dist/clipboard.min.js';
+
 
 @Component({
   selector: 'canvas-draw',
@@ -11,6 +13,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 export class CanvasDraw {
 
   @ViewChild('myCanvas') canvas: any;
+  @ViewChild('cpyBtn') cpyBtn:any;
 
   canvasElement: any;
   lastX: number;
@@ -59,6 +62,8 @@ export class CanvasDraw {
       "Chicken"
     ];
   }
+
+  //image selection for tracing
   doRadio() {
     let alert = this.alertCtrl.create();
     alert.setTitle('Tracing Image');
@@ -86,6 +91,7 @@ export class CanvasDraw {
           };
           img.src = link;
         });
+
       }
     });
 
@@ -184,6 +190,7 @@ export class CanvasDraw {
       while (ind !== arr.length) {
         ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
         while (i !== ind) {
+          console.log(i);
           cn.draw(arr[i]);
           i++;
         }
@@ -193,13 +200,11 @@ export class CanvasDraw {
     })
   }
 
-  getdata() {
-
-  }
-
   update() {
     let canvas = this;
     let db = fb.database().ref("drawing/" + this.drawingID + "/content");
+    let dbImg = fb.database().ref("drawing/" + this.drawingID + "/image");
+
 
     db.on('child_added', function (snapshot) { canvas.draw(snapshot.val()); });
   }
@@ -218,7 +223,25 @@ export class CanvasDraw {
   }
 
   share() {
-    let msg = "Enter this id to draw with me : " + this.drawingID;
-    this.socialSharing.share(msg, null, null,null);
+    if (this.platform.is('mobile')) {
+      let msg = "Enter this id to draw with me : " + this.drawingID;
+      this.socialSharing.share(msg, null, null,null);
+    } else {
+      this.presentAlert();
+    }
+  }
+
+  presentAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Copy and Share',
+      subTitle: 'Share the drawing id to collaborate:',
+      inputs: [{
+          name: 'Drawing ID',
+          value: this.drawingID,
+      }],
+      buttons: ['Done'],
+    });
+
+    alert.present();
   }
 }
