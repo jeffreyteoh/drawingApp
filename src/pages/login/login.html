@@ -7,21 +7,23 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Children's Collaborative Drawing Touch Application</ion-title>
+    <ion-title>Welcome</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
-    <ion-item style="text-align: center;">
-      <img src="../../assets/imgs/welcome.png" height="150" width="150" />
-      <button ion-button block (click)="loginUserAnonymously()" >
-        Start Draw
-      </button>
-    </ion-item>
-  </ion-list>
+<ion-content padding class="myview">
+  <ion-row style="height: 50px"></ion-row>
+  <h1 ion-text text-wrap style="text-align: center" class="header-text">
+    Children's Collaborative Drawing Touch Application
+  </h1>
+  <ion-row style="height: 100px"></ion-row>
+  <button ion-button block round
+          (click)="loginUserAnonymously()" >
+    Start Draw
+  </button>
+  <ion-row style="height: 100px"></ion-row>
 
   <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
     <div ion-button block clear > Sign in </div>
@@ -47,7 +49,7 @@
       <p>Your password needs more than 6 characters.</p>
     </ion-item>
 
-    <button ion-button block type="submit" [disabled]="!loginForm.valid">
+    <button ion-button round block type="submit" [disabled]="!loginForm.valid">
       Log In
     </button>
 
@@ -55,7 +57,7 @@
       <!--Facebook-->
     <!--</button>-->
   </form>
-  <button ion-button block (click)="loginUserWithSocialMedia('google')" >
+  <button ion-button block round (click)="loginUserWithSocialMedia('google')" >
     Google
   </button>
 

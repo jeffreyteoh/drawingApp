@@ -2,8 +2,6 @@ import { Component, ViewChild, Renderer } from '@angular/core';
 import {Platform, NavController, NavParams, AlertController } from 'ionic-angular';
 import * as fb from 'firebase';
 import { SocialSharing } from '@ionic-native/social-sharing';
-import * as Clipboard from 'clipboard/dist/clipboard.min.js';
-
 
 @Component({
   selector: 'canvas-draw',
@@ -22,6 +20,7 @@ export class CanvasDraw {
   img: any;
   availableImg: any;
   userDrawing: boolean = false;
+  openCanvas: boolean= false;
 
   currentColour: string = '#000000';
   availableColours: any;
@@ -58,6 +57,7 @@ export class CanvasDraw {
       '#e74c3c'
     ];
     this.availableImg = [
+      "Blank",
       "Barn",
       "Chicken"
     ];
@@ -73,7 +73,7 @@ export class CanvasDraw {
         type: 'radio',
         label: img,
         value: img,
-        checked: false
+        checked: img === "Blank"
       });
     });
 
@@ -82,21 +82,32 @@ export class CanvasDraw {
       text: 'Ok',
       handler: (data: any) => {
         console.log('Radio data:', data);
-        fb.storage().ref("tracing/" + data + ".gif").getDownloadURL().then(link=> {
-          let img = new Image();
-          img.onload = (data) => {
-            console.log(data);
-            let ctx = this.canvasElement.getContext("2d");
-            ctx.drawImage(img,0,0, this.canvasElement.width, this.canvasElement.height);
-          };
-          img.src = link;
-        });
-
+        //set image in canvas
+        fb.database().ref("drawing/" + this.drawingID + "/image").set({name: data });
+        this.placeImage(data);
       }
     });
-
     alert.present();
   }
+
+  placeImage(data) {
+    //return blank image
+    if (data === "Blank" || !data) return new Promise((rs)=> { return rs()});
+    return fb.storage().ref("tracing/" + data + ".gif").getDownloadURL().then(link=> {
+      let p = new Promise((rs)=> {
+        let img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = (data) => {
+          console.log(data);
+          let ctx = this.canvasElement.getContext("2d");
+          rs(ctx.drawImage(img,0,0, this.canvasElement.width, this.canvasElement.height));
+        };
+        img.src = link;
+      });
+      return p;
+    });
+  }
+
   ngOnInit() {
     // this.drawingID = this.guid();
     // console.log(this.guid());
@@ -176,28 +187,45 @@ export class CanvasDraw {
 
   playDrawing() {
     console.log("playDrawing");
-    let db = fb.database().ref("drawing/" + this.drawingID + "/content"),
-        ctx = this.canvasElement.getContext('2d'),
-        cn = this;
+    let db = fb.database().ref("drawing/" + this.drawingID);
+    let ctx = this.canvasElement.getContext('2d');
+    ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
     db.once("value").then((snap) => {
       let arr = [],
-        ind = 1,
-        i= 0;
-
-      //convert to arr for easier access
-      snap.forEach((value) => { arr.push(value.val()); });
-      while (ind !== arr.length) {
-        ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-        while (i !== ind) {
-          console.log(i);
-          cn.draw(arr[i]);
-          i++;
-        }
-        i = 0;
-        ind++;
+          obj = snap.val();
+      console.log(obj.image.name);
+      arr = Object.keys(obj.content).map(i => obj.content[i]);
+      console.log(arr);
+      if (obj.image.name === "blank" || !obj.image) {
+          setTimeout(()=> {
+            this.loopDrawing(arr);
+          },0);
+      }
+      else {
+        this.placeImage(obj.image.name).then(()=> {
+          setTimeout(()=> {
+            this.loopDrawing(arr);
+          });
+        });
       }
     })
+  }
+
+  loopDrawing(arr) {
+    let ind = 1,
+        i= 0;
+
+    while (ind !== arr.length) {
+      //clear canvas everyime for animation
+      // ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+      while (i !== ind) {
+        this.draw(arr[i]);
+        i++;
+      }
+      i = 0;
+      ind++;
+    }
   }
 
   update() {
@@ -205,8 +233,20 @@ export class CanvasDraw {
     let db = fb.database().ref("drawing/" + this.drawingID + "/content");
     let dbImg = fb.database().ref("drawing/" + this.drawingID + "/image");
 
-
-    db.on('child_added', function (snapshot) { canvas.draw(snapshot.val()); });
+    dbImg.on('child_changed',  snapshot=> {
+      let name = snapshot.val()? snapshot.val().name: null;
+      if (name !== "Blank" && name) {
+        this.placeImage(name);
+      }
+    });
+    dbImg.once('value').then(snapshot=> {
+      let name = snapshot.val()? snapshot.val().name: null;
+      if (name !== "Blank" && name) {
+        this.placeImage(name).then(()=> {
+          db.on('child_added', function (snapshot) { canvas.draw(snapshot.val()); });
+        })
+      } else { db.on('child_added', function (snapshot) { canvas.draw(snapshot.val()); });}
+    });
   }
 
   guid() {

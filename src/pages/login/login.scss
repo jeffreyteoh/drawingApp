@@ -1,4 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister|Permanent+Marker|Titan+One');
 page-login {
+  .myview{
+    background-image: url("./../../assets/imgs/hand_drawn_kid_pattern.jpg");
+  }
+  .header-text{
+    background-color: white;
+  }
+
   form {
     margin-bottom: 32px;
     button {
