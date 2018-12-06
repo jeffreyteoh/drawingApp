@@ -1,8 +1,8 @@
 <ion-toolbar id="top-toolbar">
   <ion-buttons left>
-    <button icon-only ion-button (click)="goback()">
-      <ion-icon name="arrow-back"></ion-icon>
-    </button>
+    <!--<button icon-only ion-button (click)="goback()">-->
+      <!--<ion-icon name="arrow-back"></ion-icon>-->
+    <!--</button>-->
 
     <button *ngFor="let colour of availableColours" icon-only ion-button (click)="changeColour(colour)">
       <ion-icon [style.color]="colour" name="brush"></ion-icon>
@@ -12,10 +12,10 @@
     <button style="border: 1px solid #cecece;" ion-button icon-only style.color="#fff" (click)="changeColour('#fff')">
       <ion-icon style="color: #fff;" name="square"></ion-icon>
     </button>
-    <button style="border: 1px solid #cecece;" ion-button icon-only (click)="doRadio()">
-      <ion-icon name="albums"></ion-icon>
+    <button ion-button icon-only (click)="doRadio()">
+      <ion-icon name="nutrition"></ion-icon>
     </button>
-    <button style="border: 1px solid #cecece;" ion-button icon-only (click)="share()">
+    <button ion-button icon-only (click)="share()">
       <ion-icon name="share"></ion-icon>
     </button>
   </ion-buttons>
@@ -32,6 +32,7 @@
 <ion-toolbar id="bottom-toolbar">
   <ion-buttons left>
     <button color="dark" ion-button icon-only (click)="clearCanvas()"><ion-icon name="trash"></ion-icon></button>
+    <button color="dark" ion-button icon-only (click)="gotoDashboard()"><ion-icon name="folder-open"></ion-icon></button>
     <button color="dark" ion-button icon-only (click)="playDrawing()"><ion-icon name="play"></ion-icon></button>
   </ion-buttons>
   <ion-buttons right>
@@ -41,4 +42,4 @@
     <button color="dark" ion-button icon-only (click)="changeSize(50)"><ion-icon style="font-size: 2em;" name="radio-button-on"></ion-icon></button>
     <button color="dark" ion-button icon-only (click)="changeSize(200)"><ion-icon style="font-size: 3em;" name="radio-button-on"></ion-icon></button>
   </ion-buttons>
-</ion-toolbar>
+  </ion-toolbar>

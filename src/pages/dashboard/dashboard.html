@@ -5,16 +5,19 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="primary">
       <!--<button ion-button [menuToggle]="activeMenu">-->
         <!--<ion-icon name="menu"></ion-icon>-->
       <!--</button>-->
-      <ion-title>Dashboard</ion-title>
+      <ion-title style="-webkit-text-stroke: 1px black; color: white">Draw Together</ion-title>
       <ion-buttons right>
-        <button style="border: 1px solid #cecece;" ion-button icon-only (click)="presentPrompt()">
+        <button  ion-button icon-only (click)="createNewDrawing()">
           <ion-icon name="add"></ion-icon>
         </button>
-        <button style="border: 1px solid #cecece;" ion-button icon-only (click)="logoutUser()">
+        <button  ion-button icon-only (click)="presentPrompt()">
+          <ion-icon name="contacts"></ion-icon>
+        </button>
+        <button  ion-button icon-only (click)="logoutUser()">
           <ion-icon name="exit"></ion-icon>
         </button>
       </ion-buttons>
@@ -22,13 +25,13 @@
 </ion-header>
 
 
-<ion-content class="card-background-page">
+<ion-content class="card-background-page"style="background-color: #F99D07">
 
-  <ion-card (click)="createNewDrawing()">
-    <ion-icon name="add"></ion-icon>
-    <div class="card-subtitle" >New Drawing</div>
-  </ion-card>
-
+  <!--<ion-card (click)="createNewDrawing()">-->
+    <!--<ion-icon name="add"></ion-icon>-->
+    <!--<div class="card-subtitle" >New Drawing</div>-->
+  <!--</ion-card>-->
+  <h5 ion-text text-wrap> &nbsp; &nbsp; Previous Drawing  </h5>
   <ion-card *ngFor="let list of drawingList" (click)="gotoCanvas(list.id)">
     <img src="{{list.img}}" class="" width="100%" height="297px">
   </ion-card>

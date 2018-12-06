@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, AlertController, LoadingController, Platform} from 'ionic-angular';
+import { IonicPage,
+  NavController,
+  AlertController,
+  LoadingController,
+  Platform,
+  NavParams
+} from 'ionic-angular';
 import * as firebase from 'firebase';
 import { HomePage } from "../home/home";
 import {AuthProvider} from "../../providers/auth/auth";
@@ -21,16 +27,22 @@ export class DashboardPage {
   private uid: any = firebase.auth().currentUser.uid;
   private drawingId: any;
   private drawingList: any = [];
-  activeMenu: string;
+  private fromStart: any;
 
   constructor(public navCtrl: NavController,
               private alertCtrl: AlertController,
               public loadCtrl: LoadingController,
               public platform: Platform,
-              // public menu: MenuController,
-              public authProvider: AuthProvider) {
+              public authProvider: AuthProvider,
+              navParam: NavParams
+  ) {
     this.loadCtrl.create();
+    this.fromStart = navParam.get("fromStart");
     let dash = this;
+
+    if (this.fromStart) {
+      this.createNewDrawing();
+    }
     // console.log(menu.getMenus());
     // this.menu._register()
     firebase.database().ref("user/" + this.uid + "/drawing").once("value")
@@ -42,17 +54,19 @@ export class DashboardPage {
             .then(data =>{
               dash.drawingList.push({
                 id: id,
-                img: data
+                img: data,
+                parent:this
               });
           }).catch(err=>{
             dash.drawingList.push({
               id: id,
-              img: "assets/imgs/no_image.png"
+              img: "assets/imgs/no_image.png",
+              parent: this
             });
             console.log(err);
           });
         });
-      })
+      });
   }
 
 
@@ -67,7 +81,8 @@ export class DashboardPage {
   gotoCanvas(id) {
     this.navCtrl.push(HomePage, {
       drawingID: id,
-      uid: this.uid
+      uid: this.uid,
+      parent: this
     });
   }
 
@@ -80,16 +95,11 @@ export class DashboardPage {
       });
   }
 
-  activeMenu1() {
-    this.activeMenu = "menu1";
-    // this.menu.enable(true,"menu1");
-  }
-
   presentPrompt() {
     let db = firebase.database().ref("drawing");
     let dashboard = this;
     let alert = this.alertCtrl.create({
-        title: 'Create new drawing',
+        title: "Let's Draw Together",
         inputs: [
           {
             name: 'drawingID',
@@ -105,7 +115,7 @@ export class DashboardPage {
             }
           },
           {
-            text: 'Create',
+            text: 'Go',
             handler: data => {
               console.log(data);
               if (data.drawingID) {
@@ -127,11 +137,13 @@ export class DashboardPage {
   createNewDrawing() {
     let db = firebase.database().ref("drawing");
     let dashboard = this;
-    db.push({user: [this.uid]}).then(function (snapshot) {
+    return db.push({user: [this.uid]}).then(function (snapshot) {
       dashboard.drawingId = snapshot.key;
       dashboard.newDrawing();
+      return snapshot.key;
     });
   }
+
   logoutUser() {
     this.authProvider.logoutUser().then(function () {
       console.log("logout successfully");

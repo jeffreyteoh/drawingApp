@@ -6,20 +6,29 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>startPage</ion-title>
-  </ion-navbar>
+  <!--<ion-navbar>-->
+    <!--<ion-title>Welcome</ion-title>-->
+  <!--</ion-navbar>-->
 
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
-    <ion-item style="text-align: center;">
-      <img src="../../assets/imgs/welcome.png" height="150" width="150" />
-      <button ion-button block (click)="loginUserAnonymously()" >
+<ion-content padding class="myview" style="text-align: center;">
+      <ion-row style="height: 50px"></ion-row>
+      <img  src="./../../assets/icon/icon.png"/>
+      <h1 ion-text text-wrap style="text-align: center;color: white;" class="gradRainbow">
+        Draw Together
+      </h1>
+      <ion-row style="height: 100px"></ion-row>
+      <button ion-button round  large color="light"
+              style="-webkit-text-stroke: 1px black"
+              (click)="loginUserAnonymously()" >
         Start Draw
       </button>
-    </ion-item>
-  </ion-list>
+      <ion-row style="height: 50px"></ion-row>
+  <button ion-button item-end clear block round
+          style="color: white;outline-color: black; -webkit-text-stroke: 1px black" (click)="gotoLogin()">
+   For Parents - Click here to login
+  </button>
+
 </ion-content>

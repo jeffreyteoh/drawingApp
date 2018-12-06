@@ -6,16 +6,18 @@ import { FIREBASE_CONFIG } from './firebase.config';
 
 import firebase from 'firebase/app';
 
-import { LoginPage } from "../pages/login/login";
 import { DashboardPage } from "../pages/dashboard/dashboard";
+import {StartPage} from "../pages/start/start";
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any;
+  id :any;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
+            ) {
       platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -23,12 +25,12 @@ export class MyApp {
       splashScreen.hide();
         firebase.initializeApp(FIREBASE_CONFIG);
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-          console.log(user);
           if (!user) {
-            this.rootPage = LoginPage;
+            this.rootPage = StartPage;
             unsubscribe();
           } else {
             this.rootPage = DashboardPage;
+            // this.rootPage = StartPage;
             unsubscribe();
           }
         });

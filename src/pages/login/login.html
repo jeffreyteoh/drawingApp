@@ -7,24 +7,13 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Welcome</ion-title>
+    <ion-title>Login</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding class="myview">
-  <ion-row style="height: 50px"></ion-row>
-  <h1 ion-text text-wrap style="text-align: center" class="header-text">
-    Children's Collaborative Drawing Touch Application
-  </h1>
-  <ion-row style="height: 100px"></ion-row>
-  <button ion-button block round
-          (click)="loginUserAnonymously()" >
-    Start Draw
-  </button>
-  <ion-row style="height: 100px"></ion-row>
-
   <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
     <div ion-button block clear > Sign in </div>
     <ion-item>

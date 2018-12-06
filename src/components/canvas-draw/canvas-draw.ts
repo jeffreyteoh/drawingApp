@@ -20,7 +20,6 @@ export class CanvasDraw {
   img: any;
   availableImg: any;
   userDrawing: boolean = false;
-  openCanvas: boolean= false;
 
   currentColour: string = '#000000';
   availableColours: any;
@@ -37,6 +36,7 @@ export class CanvasDraw {
     color: this.currentColour,
     brushSize: this.brushSize
   };
+  parent:any; //for refreshing image to prevent no image shown
 
   constructor(public platform: Platform,
               public renderer: Renderer,
@@ -44,8 +44,12 @@ export class CanvasDraw {
               public navCtrl: NavController,
               public socialSharing: SocialSharing,
               public alertCtrl: AlertController) {
+    //get passing param from last page
     this.drawingID = navParam.get("drawingID");
     this.uid = navParam.get("uid");
+    this.parent = navParam.get("parent");
+    // console.log(this.lastParent);
+    // this.lastParent.refreshImage();
     this.pixi.user = this.uid;
     this.userDrawing = false;
     this.availableColours = [
@@ -54,10 +58,10 @@ export class CanvasDraw {
       '#3498db',
       '#9b59b6',
       '#e67e22',
-      '#e74c3c'
+      '#e74c3c',
+      '#FFFF00'
     ];
     this.availableImg = [
-      "Blank",
       "Barn",
       "Chicken"
     ];
@@ -66,25 +70,26 @@ export class CanvasDraw {
   //image selection for tracing
   doRadio() {
     let alert = this.alertCtrl.create();
-    alert.setTitle('Tracing Image');
+    alert.setTitle("Let's Trace");
 
     this.availableImg.forEach(img=> {
       alert.addInput({
         type: 'radio',
         label: img,
         value: img,
-        checked: img === "Blank"
+        checked: img === "Barn"
       });
     });
 
     alert.addButton('Cancel');
     alert.addButton({
-      text: 'Ok',
+      text: 'Go',
       handler: (data: any) => {
         console.log('Radio data:', data);
         //set image in canvas
-        fb.database().ref("drawing/" + this.drawingID + "/image").set({name: data });
-        this.placeImage(data);
+        this.parent.createNewDrawing().then((id)=> {
+          fb.database().ref("drawing/" + id + "/image").set({name: data });
+        });
       }
     });
     alert.present();
@@ -159,10 +164,10 @@ export class CanvasDraw {
   convert2Img() {
     this.userDrawing= false;
     let b64 = this.canvasElement.toDataURL();
+    let metadata = { cacheControl: "no-store" };
+
     b64 = b64.replace("data:image/png;base64,", '');
-    fb.storage().ref("drawing/" + this.drawingID + ".png" ).delete()
-      .catch(err=> {console.log(err)});
-    fb.storage().ref("drawing/" + this.drawingID + ".png" ).putString(b64, "base64");
+    fb.storage().ref("drawing/" + this.drawingID + ".png" ).putString(b64, "base64",metadata);
   }
 
   draw(pixi) {
@@ -171,7 +176,7 @@ export class CanvasDraw {
       ctx.beginPath();
       ctx.lineJoin = "round";
       ctx.moveTo(pixi.lastX, pixi.lastY);
-      ctx.lineTo(pixi.currentX, pixi.currentY);
+      ctx.lineTo(pixi.currentX, pixi.currentY);``
       ctx.closePath();
       ctx.strokeStyle = pixi.color;
       ctx.lineWidth = pixi.brushSize;
@@ -194,10 +199,10 @@ export class CanvasDraw {
     db.once("value").then((snap) => {
       let arr = [],
           obj = snap.val();
-      console.log(obj.image.name);
+      // console.log(obj.image.name);
       arr = Object.keys(obj.content).map(i => obj.content[i]);
       console.log(arr);
-      if (obj.image.name === "blank" || !obj.image) {
+      if (!obj.image ||obj.image.name === "blank" ) {
           setTimeout(()=> {
             this.loopDrawing(arr);
           },0);
@@ -239,14 +244,19 @@ export class CanvasDraw {
         this.placeImage(name);
       }
     });
+
     dbImg.once('value').then(snapshot=> {
       let name = snapshot.val()? snapshot.val().name: null;
       if (name !== "Blank" && name) {
         this.placeImage(name).then(()=> {
-          db.on('child_added', function (snapshot) { canvas.draw(snapshot.val()); });
+          db.on('child_added', function (snapshot) {
+            canvas.draw(snapshot.val()); });
         })
       } else { db.on('child_added', function (snapshot) { canvas.draw(snapshot.val()); });}
+
+      db.on('child_removed', function (snapshot) { canvas.clearCanvas(); })
     });
+    // db.on('child_removed')
   }
 
   guid() {
@@ -283,5 +293,9 @@ export class CanvasDraw {
     });
 
     alert.present();
+  }
+
+  gotoDashboard() {
+    location.reload();
   }
 }

@@ -1,3 +1,21 @@
 page-start {
+  .myview{
+    background-color: yellowgreen;
+  }
+  .gradRainbow{
+    background: red;
+    background: -webkit-linear-gradient(left, #0088FF ,#FFAA00, #FF7700, #FF0033, #9911AA, #AADD22);
+    background: -o-linear-gradient(right, #0088FF ,#FFAA00, #FF7700, #FF0033, #9911AA, #AADD22);
+    background: -moz-linear-gradient(right,  #0088FF ,#FFAA00, #FF7700, #FF0033, #9911AA, #AADD22);
+    background: linear-gradient(to right,  #0088FF ,#FFAA00, #FF7700, #FF0033, #9911AA, #AADD22);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 10vw;
+    -webkit-text-stroke: 4px black;
+  }
+
+  ion-buttons {
+    -webkit-text-stroke: 4px black;
+  }
 
 }

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, LoadingController} from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { DashboardPage } from "../dashboard/dashboard";
 import { AuthProvider } from "../../providers/auth/auth";
+import { LoginPage } from "../login/login";
 
 
 /**
@@ -19,23 +20,28 @@ import { AuthProvider } from "../../providers/auth/auth";
 export class StartPage {
 
   constructor(public navCtrl: NavController,
-              public navParams: NavParams,
               public authProvider: AuthProvider,
-              public loadingCtrl: LoadingController,
-  ) {
-  }
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StartPage');
   }
 
   loginUserAnonymously() {
-    this.authProvider.loginUserAnonymously().then((a)=> {
-      console.log(a);
-      // this.loading.dismiss().then(() => {
-        this.navCtrl.setRoot(DashboardPage);
-      // });
-    });
+      this.authProvider.loginUserAnonymously().then((a)=> {
+        // this.loading.dismiss().then(() => {
+        this.navCtrl.setRoot(DashboardPage, {
+          fromStart: true
+        });
+      });
   }
+
+  gotoLogin() {
+    this.navCtrl.push(LoginPage);
+  }
+
+  // gotoDrawing() {
+  //   // this.navCtrl.set
+  // }
 
 }

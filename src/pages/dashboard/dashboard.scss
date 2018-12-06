@@ -1,14 +1,26 @@
+
+//.toolbar-background {
+//  background-image: url("./../../assets/imgs/images.jpg");
+//}
+
+.alert-title{
+  text-align: center;
+}
+
 .card-background-page {
 
   ion-card {
     position: relative;
     text-align: center;
     height: 297px;
+    //background-color: lightblue;
+    border-radius : 10px;
   }
 
   ion-icon {
     position: absolute;
     top: 36%;
+    background-color: white;
   }
 
   .card-title {

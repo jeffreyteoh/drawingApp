@@ -13,6 +13,7 @@ import { GooglePlus } from "@ionic-native/google-plus";
 import { HomePage } from "../pages/home/home";
 import { SocialSharing} from "@ionic-native/social-sharing";
 import {IonicStorageModule} from "@ionic/storage";
+import {StartPage} from "../pages/start/start";
 
 @NgModule({
   declarations: [
@@ -20,13 +21,13 @@ import {IonicStorageModule} from "@ionic/storage";
     DashboardPage,
     LoginPage,
     CanvasDraw,
-    HomePage
+    HomePage,
+    StartPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
-
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -34,7 +35,8 @@ import {IonicStorageModule} from "@ionic/storage";
     DashboardPage,
     LoginPage,
     HomePage,
-    CanvasDraw
+    CanvasDraw,
+    StartPage
   ],
   providers: [
     StatusBar,
